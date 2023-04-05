@@ -14,16 +14,28 @@ const Home = () => {
         setUsers(data)
       })
   }
+  const [originalData, setOriginalUsers] = useState([])
 
-  // console.log(users)
-
+  const fetchData1 = () => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        setOriginalUsers(data)
+      })
+  }
   useEffect(() => {
     fetchData()
   }, [])
+  useEffect(() => {
+    fetchData1()
+  }, [])
 
-const sortIn = () =>{
-  window.location.reload();
-}
+  const sortIn = () => {
+    setUsers(originalData)
+
+  }
   const sortOut = () => {
     users.sort((a, b) => {
       let fa = a.name.toLowerCase(),
@@ -43,17 +55,17 @@ const sortIn = () =>{
       console.log(`${e.name}`);
     });
     let users1 = localStorage.getItem('users')
-    
+
     setUsers(JSON.parse(users1))
   }
 
 
   return (
     <>
-      <div style={{ fontSize: "3rem", textAlign: "center", margin: "1%" , marginBottom: "10px"}}>Dashboard</div>
-      <button className="btn btn-primary" style={{width:"90px", borderRadius: "10px", marginRight: "10px", marginBottom: "10px"}} onClick={(e) => sortOut()} >Sort</button>
-     
-      <button className="btn btn-primary" style={{width:"90px", borderRadius: "10px"}} onClick={(e) => sortIn()} >UnSort</button>
+      <div style={{ fontSize: "3rem", textAlign: "center", margin: "1%", marginBottom: "10px" }}>Dashboard</div>
+      <button className="btn btn-primary" style={{ width: "90px", borderRadius: "10px", marginRight: "10px", marginBottom: "10px" }} onClick={(e) => sortOut()} >Sort</button>
+
+      <button className="btn btn-primary" style={{ width: "90px", borderRadius: "10px" }} onClick={(e) => sortIn()} >UnSort</button>
       <table>
         <tr >
           <th >Sno</th>
