@@ -31,9 +31,11 @@ const Home = () => {
   useEffect(() => {
     fetchData1()
   }, [])
+  localStorage.setItem("users2", JSON.stringify(originalData))
 
   const sortIn = () => {
-    setUsers(originalData)
+    let users2 = localStorage.getItem("users2")
+    setUsers(JSON.parse(users2))
 
   }
   const sortOut = () => {
@@ -50,6 +52,7 @@ const Home = () => {
     });
 
     localStorage.setItem("users", JSON.stringify(users))
+    
 
     users.forEach((e) => {
       console.log(`${e.name}`);
