@@ -1,40 +1,54 @@
 import React from "react";
 import './Login.css'
+
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
+import ReCAPTCHA from "react-google-recaptcha";
+import { useState } from "react";
 
 
 const Login = () => {
 
-
-  //dfghjkl
-  
-  //dfghjkl
   const navigate = useNavigate();
-
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [captchaExpired, setCaptchaExpired] = useState(false);
   const emailRef = useRef(undefined);
   const passwordRef = useRef(undefined);
 
+
+  const handleCaptchaChange = (token) => {
+    setCaptchaToken(token);
+    setCaptchaVerified(true);
+    
+    setCaptchaExpired(false);
+    setTimeout(() => {
+      setCaptchaExpired(true);
+      setCaptchaToken("");
+    }, 60000);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-
-
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-
     let emailStored = localStorage.getItem("email")
     let passwordStored = localStorage.getItem("password")
-
-
-    if (email === emailStored && password === passwordStored) {
+    if (email === emailStored && password === passwordStored && captchaVerified) {
       console.log("True Credentials")
       navigate('/home');
     } else {
-      alert("Wrong Credentials")
+      alert("Please Verify capTcha or Credentials are wrong !")
+    }
+    event.target.reset();
+  };
+  const handleCookies = (event) => {
+    let obj1 = {
+      "email": emailRef.current.value,
+      "password": passwordRef.current.value
     }
 
-    event.target.reset();
-
+    document.cookie = `"Email_password"=${JSON.stringify(obj1)}`
   };
   return (
     <>
@@ -44,7 +58,7 @@ const Login = () => {
           <h1>Login Form</h1>
           <form onSubmit={handleSubmit} style={{ borderRadius: "20px", backgroundColor: "#FFEBEE", padding: "20px", }}>
             <input
-            style={{width: "280px"}}
+              style={{ width: "280px" }}
               type="text"
               id="email"
               name="email"
@@ -54,7 +68,7 @@ const Login = () => {
             />
 
             <input
-            style={{width: "280px"}}
+              style={{ width: "280px" }}
               type="text"
               id="password"
               name="password"
@@ -63,11 +77,12 @@ const Login = () => {
               ref={passwordRef}
             />
             <br />
-            <input type="checkbox" value="lsRememberMe" id="rememberMe" />
+            <input type="checkbox" value="lsRememberMe" id="rememberMe" onClick={handleCookies} />
             <label htmlFor="rememberMe">Save password</label>
             <br />
             <br />
-           
+            <ReCAPTCHA sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" onChange={handleCaptchaChange} expiration={60} />
+            <br />
             <button className="btn btn-primary" type="submit">Submit</button>
 
           </form>

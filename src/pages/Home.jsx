@@ -14,8 +14,6 @@ const Home = () => {
         setUsers(data)
       })
   }
-  const [originalData, setOriginalUsers] = useState([])
-
   const fetchData1 = () => {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then(response => {
@@ -25,6 +23,10 @@ const Home = () => {
         setOriginalUsers(data)
       })
   }
+
+  const [originalData, setOriginalUsers] = useState([])
+
+
   useEffect(() => {
     fetchData()
   }, [])
